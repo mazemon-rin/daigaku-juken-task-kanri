@@ -88,6 +88,21 @@ App.bindEvents = function bindEvents() {
     if (del) App.todaysTasks().splice(Number(del.dataset.deleteTask), 1);
     App.renderTasks();
   });
+  App.el.dailyPlanForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    App.addDailyPlanItem();
+  });
+  App.el.dailyPlanList.addEventListener("click", (event) => {
+    const del = event.target.closest("[data-delete-plan]");
+    if (!del) return;
+    App.todaysPlan().splice(Number(del.dataset.deletePlan), 1);
+    App.renderDailyPlan();
+  });
+  App.el.clearPlanButton.addEventListener("click", () => {
+    if (!confirm("今日の計画をすべて削除しますか？")) return;
+    App.state.dailyPlans[App.dateKey()] = [];
+    App.renderDailyPlan();
+  });
 
   App.el.subjectForm.addEventListener("submit", (event) => {
     event.preventDefault();

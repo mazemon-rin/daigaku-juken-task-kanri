@@ -25,6 +25,7 @@ App.renderAll = function renderAll() {
   App.renderHistory();
   App.renderAnalysis();
   App.renderSettings();
+  App.renderDailyPlan();
   App.renderTasks();
   App.renderTimer();
   App.updateStatisticsCache();

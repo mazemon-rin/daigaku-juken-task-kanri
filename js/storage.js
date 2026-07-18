@@ -9,6 +9,7 @@ App.keys = {
   statistics: "statistics",
   goals: "goals",
   tasks: "study-tracker-tasks",
+  dailyPlans: "study-tracker-daily-plans",
 };
 
 App.defaults = {
@@ -65,6 +66,7 @@ App.state = {
   statistics: {},
   goals: { ...App.defaults.goals },
   tasks: {},
+  dailyPlans: {},
   analysisRange: "today",
 };
 
@@ -80,6 +82,7 @@ App.loadState = function loadState() {
   App.state.timerState = { ...App.defaults.timerState, ...App.storage.read(App.keys.timerState, {}) };
   App.state.statistics = App.storage.read(App.keys.statistics, {});
   App.state.tasks = App.storage.read(App.keys.tasks, {});
+  App.state.dailyPlans = App.storage.read(App.keys.dailyPlans, {});
   App.saveAll();
 };
 
@@ -91,6 +94,7 @@ App.saveAll = function saveAll() {
   App.storage.write(App.keys.statistics, App.state.statistics);
   App.storage.write(App.keys.goals, App.state.goals);
   App.storage.write(App.keys.tasks, App.state.tasks);
+  App.storage.write(App.keys.dailyPlans, App.state.dailyPlans);
 };
 
 App.savePart = function savePart(key) {

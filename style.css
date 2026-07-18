@@ -575,6 +575,58 @@ select:focus {
   text-decoration: line-through;
 }
 
+.daily-plan-form {
+  display: grid;
+  grid-template-columns: 120px 120px 1fr 1fr 100px;
+  gap: 10px;
+  align-items: end;
+  margin-top: 14px;
+}
+
+.daily-plan-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.plan-item {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: var(--panel);
+}
+
+.plan-time {
+  color: var(--accent);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-main {
+  display: grid;
+  gap: 4px;
+}
+
+.plan-main span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.app-footer {
+  display: grid;
+  gap: 4px;
+  width: min(1120px, calc(100% - 32px));
+  margin: -84px auto 100px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
 @media (max-width: 820px) {
   .app-shell {
     width: min(100% - 20px, 1120px);
@@ -607,13 +659,16 @@ select:focus {
   }
 
   .actions,
-  .task-form {
+  .task-form,
+  .daily-plan-form,
+  .plan-item {
     display: grid;
     grid-template-columns: 1fr;
   }
 
   .actions button,
-  .task-form button {
+  .task-form button,
+  .daily-plan-form button {
     width: 100%;
   }
 
@@ -635,5 +690,10 @@ select:focus {
   .month-day {
     min-height: 48px;
     padding: 6px;
+  }
+
+  .app-footer {
+    width: min(100% - 20px, 1120px);
+    margin-bottom: 96px;
   }
 }

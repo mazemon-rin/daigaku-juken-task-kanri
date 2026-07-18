@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
     <title>Study Tracker</title>
     <link rel="stylesheet" href="style.css">
   </head>
@@ -165,6 +167,20 @@
           </div>
         </section>
         <section class="panel">
+          <div class="section-heading">
+            <h2>1日の計画</h2>
+            <button id="clearPlanButton" type="button" class="text-button">計画を削除</button>
+          </div>
+          <form id="dailyPlanForm" class="daily-plan-form">
+            <label class="field"><span>開始</span><input id="planStartInput" type="time"></label>
+            <label class="field"><span>終了</span><input id="planEndInput" type="time"></label>
+            <label class="field"><span>内容</span><input id="planTitleInput" type="text" placeholder="英単語、数学演習、休憩など"></label>
+            <label class="field"><span>メモ</span><input id="planNoteInput" type="text" placeholder="ページ数や優先度をメモ"></label>
+            <button type="submit" class="primary">追加</button>
+          </form>
+          <div id="dailyPlanList" class="daily-plan-list"></div>
+        </section>
+        <section class="panel">
           <h2>今日やること</h2>
           <form id="taskForm" class="task-form">
             <input id="taskInput" class="compact-input" type="text" placeholder="数学 2時間">
@@ -216,6 +232,11 @@
       <button class="tab" data-tab="goals" type="button">目標</button>
       <button class="tab" data-tab="settings" type="button">設定</button>
     </nav>
+
+    <footer class="app-footer">
+      <span>ライセンス: MIT License</span>
+      <span>著作権表示: Copyright (c) 2026 mazemon-rin</span>
+    </footer>
 
     <script src="js/storage.js"></script>
     <script src="js/statistics.js"></script>

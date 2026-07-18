@@ -26,6 +26,56 @@ App.renderGoalProgress = function renderGoalProgress() {
   App.el.todayGoalLeft.textContent = left ? `残り ${App.formatMinutes(left)}` : "今日の目標達成";
 };
 
+App.todaysPlan = function todaysPlan() {
+  const today = App.dateKey();
+  if (!Array.isArray(App.state.dailyPlans[today])) App.state.dailyPlans[today] = [];
+  return App.state.dailyPlans[today];
+};
+
+App.addDailyPlanItem = function addDailyPlanItem() {
+  const title = App.el.planTitleInput.value.trim();
+  if (!title) {
+    App.el.planTitleInput.focus();
+    return;
+  }
+  App.todaysPlan().push({
+    start: App.el.planStartInput.value,
+    end: App.el.planEndInput.value,
+    title,
+    note: App.el.planNoteInput.value.trim(),
+  });
+  App.el.planTitleInput.value = "";
+  App.el.planNoteInput.value = "";
+  App.renderDailyPlan();
+};
+
+App.renderDailyPlan = function renderDailyPlan() {
+  const list = App.todaysPlan()
+    .map((item, index) => ({ ...item, index }))
+    .sort((a, b) => `${a.start || "99:99"}${a.end || ""}`.localeCompare(`${b.start || "99:99"}${b.end || ""}`));
+  App.el.dailyPlanList.innerHTML = "";
+  if (!list.length) {
+    App.el.dailyPlanList.innerHTML = '<p class="empty-state">今日の計画はまだありません</p>';
+    App.savePart("dailyPlans");
+    return;
+  }
+  list.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "plan-item";
+    const time = item.start || item.end ? `${item.start || "--:--"} - ${item.end || "--:--"}` : "時間未定";
+    row.innerHTML = `
+      <div class="plan-time">${App.escapeHtml(time)}</div>
+      <div class="plan-main">
+        <strong>${App.escapeHtml(item.title)}</strong>
+        ${item.note ? `<span>${App.escapeHtml(item.note)}</span>` : ""}
+      </div>
+      <button type="button" class="text-button" data-delete-plan="${item.index}">削除</button>
+    `;
+    App.el.dailyPlanList.append(row);
+  });
+  App.savePart("dailyPlans");
+};
+
 App.renderExamCountdown = function renderExamCountdown() {
   if (!App.state.settings.examDate) {
     App.el.examCountdown.textContent = "未設定";
@@ -112,13 +162,14 @@ App.exportJson = function exportJson() {
     statistics: App.state.statistics,
     goals: App.state.goals,
     tasks: App.state.tasks,
+    dailyPlans: App.state.dailyPlans,
   };
   App.exportFile("study-tracker-backup.json", JSON.stringify(data, null, 2), "application/json");
 };
 
 App.importJson = async function importJson(file) {
   const data = JSON.parse(await file.text());
-  ["subjects", "records", "settings", "timerState", "statistics", "goals", "tasks"].forEach((key) => {
+  ["subjects", "records", "settings", "timerState", "statistics", "goals", "tasks", "dailyPlans"].forEach((key) => {
     if (data[key]) App.state[key] = Array.isArray(App.state[key]) ? data[key] : { ...App.state[key], ...data[key] };
   });
   App.saveAll();
