@@ -123,6 +123,11 @@ App.bindEvents = function bindEvents() {
   App.el.importJsonInput.addEventListener("change", () => App.el.importJsonInput.files[0] && App.importJson(App.el.importJsonInput.files[0]));
 
   window.addEventListener("beforeunload", () => App.saveAll());
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && App.state.timerState.status === "running") {
+      App.requestWakeLock();
+    }
+  });
 };
 
 function adjustInput(input, diff, callback) {
@@ -141,6 +146,7 @@ function adjustInput(input, diff, callback) {
 - 履歴の検索、編集、削除
 - CSV保存/読込、JSONバックアップ/復元
 - 通知音、ダークモード、デフォルト時間、自動保存、目標時間の設定
+- タイマー中の画面スリープ防止
 
 変更点:
 - script.jsをjs/配下の機能別ファイルへ分割

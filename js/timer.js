@@ -4,6 +4,33 @@ window.App = window.App || {};
 App.timerInterval = null;
 App.audioContext = null;
 App.isFinishingTimer = false;
+App.wakeLock = null;
+
+App.requestWakeLock = async function requestWakeLock() {
+  if (!("wakeLock" in navigator)) return;
+  if (App.wakeLock) return;
+
+  try {
+    App.wakeLock = await navigator.wakeLock.request("screen");
+    App.wakeLock.addEventListener("release", () => {
+      App.wakeLock = null;
+    });
+  } catch (error) {
+    console.warn("画面スリープ防止を有効にできませんでした", error);
+  }
+};
+
+App.releaseWakeLock = async function releaseWakeLock() {
+  if (!App.wakeLock) return;
+
+  try {
+    await App.wakeLock.release();
+  } catch (error) {
+    console.warn("画面スリープ防止の解除に失敗しました", error);
+  } finally {
+    App.wakeLock = null;
+  }
+};
 
 App.unlockAudio = function unlockAudio() {
   if (!App.state.settings.soundEnabled) return;
@@ -123,6 +150,7 @@ App.beep = async function beep() {
 
 App.startTimer = function startTimer() {
   App.unlockAudio();
+  App.requestWakeLock();
   const subject = App.el.subjectInput.value.trim();
   if (!subject && App.state.timerState.mode === "study") {
     App.el.subjectInput.focus();
@@ -147,6 +175,7 @@ App.startTimer = function startTimer() {
 
 App.pauseTimer = function pauseTimer() {
   window.clearInterval(App.timerInterval);
+  App.releaseWakeLock();
   App.state.timerState.status = "paused";
   App.state.timerState.expectedEndAt = null;
   App.savePart("timerState");
@@ -155,6 +184,7 @@ App.pauseTimer = function pauseTimer() {
 
 App.resetTimer = function resetTimer() {
   window.clearInterval(App.timerInterval);
+  App.releaseWakeLock();
   App.state.timerState = {
     ...App.defaults.timerState,
     studyMinutes: Number(App.el.minutesInput.value) || App.state.settings.defaultStudyMinutes,
@@ -183,6 +213,7 @@ App.finishTimerPhase = async function finishTimerPhase() {
   App.isFinishingTimer = true;
   window.clearInterval(App.timerInterval);
   App.timerInterval = null;
+  App.releaseWakeLock();
 
   await App.beep();
 
@@ -214,6 +245,7 @@ App.finishTimerPhase = async function finishTimerPhase() {
 };
 
 App.startNextPhase = function startNextPhase(mode) {
+  App.requestWakeLock();
   const seconds = (mode === "study" ? App.state.timerState.studyMinutes : App.state.timerState.breakMinutes) * 60;
   App.state.timerState = {
     ...App.state.timerState,
