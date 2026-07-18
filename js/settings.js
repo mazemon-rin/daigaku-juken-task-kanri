@@ -14,6 +14,9 @@ App.renderSettings = function renderSettings() {
   App.el.dailyGoalInput.value = App.state.goals.dailyGoalHours;
   App.el.examNameInput.value = settings.examName;
   App.el.examDateInput.value = settings.examDate;
+  App.el.vibrationSupportText.textContent = "vibrate" in navigator
+    ? "この端末ではバイブレーションに対応している可能性があります"
+    : "この端末のブラウザではバイブレーションに対応していません";
   document.body.classList.toggle("dark", settings.darkMode);
   App.renderExamCountdown();
   App.renderGoalProgress();
