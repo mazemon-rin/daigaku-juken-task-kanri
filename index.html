@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Study Tracker</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">受験勉強ログ</p>
+          <h1>Study Tracker</h1>
+        </div>
+        <div class="clock" aria-live="polite">
+          <span id="todayLabel"></span>
+          <strong id="clockText"></strong>
+        </div>
+      </header>
+
+      <section id="home" class="tab-page active">
+        <section class="panel timer-panel">
+          <div id="timerModeBadge" class="mode-badge study">勉強中</div>
+          <div class="setup-grid">
+            <label class="field">
+              <span>科目</span>
+              <input id="subjectInput" list="subjectList" type="text" placeholder="数学" autocomplete="off">
+              <datalist id="subjectList"></datalist>
+            </label>
+            <label class="field">
+              <span>勉強時間</span>
+              <div class="minutes-control">
+                <button id="decreaseMinutes" type="button">−</button>
+                <input id="minutesInput" type="number" min="1" max="600" step="1">
+                <span>分</span>
+                <button id="increaseMinutes" type="button">＋</button>
+              </div>
+            </label>
+          </div>
+          <div class="setup-grid">
+            <label class="field">
+              <span>休憩時間</span>
+              <div class="minutes-control">
+                <button id="decreaseBreak" type="button">−</button>
+                <input id="breakMinutesInput" type="number" min="1" max="120" step="1">
+                <span>分</span>
+                <button id="increaseBreak" type="button">＋</button>
+              </div>
+            </label>
+            <label class="toggle-field">
+              <input id="pomodoroToggle" type="checkbox">
+              <span>ポモドーロを自動で繰り返す</span>
+            </label>
+          </div>
+          <label class="field memo-field">
+            <span>勉強メモ</span>
+            <input id="memoInput" type="text" placeholder="青チャート P32〜45、#共テ など">
+          </label>
+          <div id="timerDisplay" class="timer-display study">
+            <p id="statusText">準備できたらスタート</p>
+            <strong id="timerText">25:00</strong>
+            <div class="progress-track"><div id="progressBar"></div></div>
+          </div>
+          <div class="actions">
+            <button id="startPauseButton" type="button" class="primary">スタート</button>
+            <button id="resetButton" type="button">リセット</button>
+            <button id="completeButton" type="button">今すぐ記録</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <h2>今日の目標</h2>
+            <strong id="todayGoalSummary">0分 / 8時間</strong>
+          </div>
+          <div class="progress-track goal-track"><div id="todayGoalBar"></div></div>
+          <p id="todayGoalLeft" class="muted-line">残り 8時間</p>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <h2>今日の記録</h2>
+            <button id="clearTodayButton" type="button" class="text-button">今日を削除</button>
+          </div>
+          <div id="recordList" class="record-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <h2>今日の合計</h2>
+            <strong id="totalTime">0分</strong>
+          </div>
+          <div id="subjectTotals" class="subject-totals"></div>
+        </section>
+      </section>
+
+      <section id="history" class="tab-page">
+        <section class="panel">
+          <div class="section-heading">
+            <h2>全履歴</h2>
+            <input id="historySearch" class="compact-input" type="search" placeholder="科目・メモ・タグ">
+          </div>
+          <div id="historyList" class="record-list"></div>
+        </section>
+      </section>
+
+      <section id="analysis" class="tab-page">
+        <section class="panel">
+          <div class="section-heading">
+            <h2>分析</h2>
+            <div class="segmented">
+              <button class="range-button active" data-range="today" type="button">今日</button>
+              <button class="range-button" data-range="week" type="button">今週</button>
+              <button class="range-button" data-range="month" type="button">今月</button>
+              <button class="range-button" data-range="year" type="button">今年</button>
+            </div>
+          </div>
+        </section>
+        <section class="stats-grid">
+          <div class="metric panel"><span id="rangeLabel">今日</span><strong id="rangeTotal">0分</strong></div>
+          <div class="metric panel"><span>平均</span><strong id="rangeAverage">0分/日</strong></div>
+          <div class="metric panel"><span>最大勉強時間</span><strong id="rangeMax">0分</strong></div>
+          <div class="metric panel"><span>連続日数</span><strong id="streakDays">0日</strong></div>
+        </section>
+        <section class="insights-grid">
+          <div class="panel"><h2>教科別集計</h2><div id="allSubjectTotals" class="bar-list"></div></div>
+          <div class="panel"><h2>週間グラフ</h2><div id="weekGraph" class="bar-list"></div></div>
+        </section>
+        <section class="insights-grid">
+          <div class="panel"><h2>月別グラフ</h2><div id="monthlyGraph" class="bar-list"></div></div>
+          <div class="panel"><h2>月間カレンダー</h2><div id="monthCalendar" class="month-calendar"></div></div>
+        </section>
+        <section class="insights-grid">
+          <div class="panel">
+            <div class="section-heading">
+              <h2>教科ごとの推移</h2>
+              <select id="trendSubject" class="compact-input"></select>
+            </div>
+            <div id="subjectTrend" class="bar-list"></div>
+          </div>
+          <div class="panel"><h2>学習バランス</h2><div id="subjectBalance" class="donut-wrap"></div></div>
+        </section>
+      </section>
+
+      <section id="goals" class="tab-page">
+        <section class="insights-grid">
+          <div class="panel">
+            <h2>目標時間</h2>
+            <label class="field">
+              <span>今日の目標</span>
+              <div class="minutes-control goal-input">
+                <input id="dailyGoalInput" type="number" min="0" max="24" step="0.5">
+                <span>時間</span>
+                <button id="saveGoalButton" type="button" class="primary">保存</button>
+              </div>
+            </label>
+          </div>
+          <div class="panel">
+            <h2>試験まで</h2>
+            <label class="field"><span>試験名</span><input id="examNameInput" type="text" placeholder="共通テスト"></label>
+            <label class="field"><span>試験日</span><input id="examDateInput" type="date"></label>
+            <button id="saveExamButton" type="button" class="primary wide-button">保存</button>
+            <strong id="examCountdown" class="countdown">未設定</strong>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>今日やること</h2>
+          <form id="taskForm" class="task-form">
+            <input id="taskInput" class="compact-input" type="text" placeholder="数学 2時間">
+            <button type="submit" class="primary">追加</button>
+          </form>
+          <div id="taskProgress" class="muted-line"></div>
+          <div id="taskList" class="task-list"></div>
+        </section>
+      </section>
+
+      <section id="settings" class="tab-page">
+        <section class="insights-grid">
+          <div class="panel">
+            <h2>設定</h2>
+            <label class="toggle-field"><input id="soundToggle" type="checkbox"><span>通知音ON</span></label>
+            <label class="toggle-field"><input id="themeToggle" type="checkbox"><span>ダークモード</span></label>
+            <label class="toggle-field"><input id="autoSaveToggle" type="checkbox"><span>自動保存ON</span></label>
+            <label class="field"><span>デフォルト勉強時間</span><input id="defaultStudyInput" type="number" min="1" max="600"></label>
+            <label class="field"><span>デフォルト休憩時間</span><input id="defaultBreakInput" type="number" min="1" max="120"></label>
+            <label class="field"><span>目標勉強時間</span><input id="settingsGoalInput" type="number" min="0" max="24" step="0.5"></label>
+          </div>
+          <div class="panel">
+            <h2>科目管理</h2>
+            <form id="subjectForm" class="task-form">
+              <input id="newSubjectInput" class="compact-input" type="text" placeholder="化学">
+              <button type="submit" class="primary">追加</button>
+            </form>
+            <div id="subjectManageList" class="task-list"></div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>データ保存</h2>
+          <div class="actions left-actions">
+            <button id="exportCsvButton" type="button">CSV保存</button>
+            <button id="exportJsonButton" type="button">JSONバックアップ</button>
+          </div>
+          <div class="setup-grid">
+            <label class="field"><span>CSV読込</span><input id="importCsvInput" type="file" accept=".csv,text/csv"></label>
+            <label class="field"><span>JSON復元</span><input id="importJsonInput" type="file" accept="application/json"></label>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <nav class="bottom-tabs" aria-label="画面切り替え">
+      <button class="tab active" data-tab="home" type="button">ホーム</button>
+      <button class="tab" data-tab="history" type="button">履歴</button>
+      <button class="tab" data-tab="analysis" type="button">分析</button>
+      <button class="tab" data-tab="goals" type="button">目標</button>
+      <button class="tab" data-tab="settings" type="button">設定</button>
+    </nav>
+
+    <script src="js/storage.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/subject.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
