@@ -60,10 +60,12 @@ App.bindEvents = function bindEvents() {
     const del = event.target.closest("[data-delete-record]");
     const subjectDel = event.target.closest("[data-delete-subject]");
     const historyDate = event.target.closest("[data-history-date]");
+    const useSubject = event.target.closest("[data-use-subject]");
     if (edit) App.editRecord(edit.dataset.editRecord);
     if (del) App.deleteRecord(del.dataset.deleteRecord);
     if (subjectDel) App.deleteSubject(subjectDel.dataset.deleteSubject);
     if (historyDate) App.showDateHistory(historyDate.dataset.historyDate);
+    if (useSubject) App.useHistoryItemForTimer(useSubject.dataset.useSubject, useSubject.dataset.useMemo);
   });
 
   App.el.saveGoalButton.addEventListener("click", () => {

@@ -52,7 +52,10 @@ App.renderHistory = function renderHistory() {
 App.historyTaskNode = function historyTaskNode(task) {
   const item = document.createElement("div");
   item.className = "history-task-item";
-  item.innerHTML = `<span>${task.done ? "済" : "未"}: ${App.escapeHtml(task.text)}</span>`;
+  item.innerHTML = `
+    <span>${task.done ? "済" : "未"}: ${App.escapeHtml(task.text)}</span>
+    <button type="button" class="small-button" data-use-subject="${App.escapeHtml(task.text)}" data-use-memo="">科目に入れる</button>
+  `;
   return item;
 };
 
@@ -66,8 +69,20 @@ App.historyPlanNode = function historyPlanNode(plan) {
       <strong>${App.escapeHtml(plan.title)}</strong>
       ${plan.note ? `<span>${App.escapeHtml(plan.note)}</span>` : ""}
     </div>
+    <button type="button" class="small-button" data-use-subject="${App.escapeHtml(plan.title)}" data-use-memo="${App.escapeHtml(plan.note || "")}">科目に入れる</button>
   `;
   return item;
+};
+
+App.useHistoryItemForTimer = function useHistoryItemForTimer(subject, memo) {
+  const cleanSubject = String(subject || "").trim();
+  if (!cleanSubject) return;
+  App.el.subjectInput.value = cleanSubject;
+  App.el.memoInput.value = String(memo || "").trim();
+  App.addSubject(cleanSubject);
+  App.savePart("subjects");
+  App.switchTab("home");
+  App.el.subjectInput.focus();
 };
 
 App.renderSelectedDateHistory = function renderSelectedDateHistory() {
