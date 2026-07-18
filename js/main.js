@@ -30,6 +30,7 @@ App.bindEvents = function bindEvents() {
   App.el.startPauseButton.addEventListener("click", () => {
     App.state.timerState.status === "running" ? App.pauseTimer() : App.startTimer();
   });
+  App.el.startBreakButton.addEventListener("click", App.startManualBreak);
   App.el.resetButton.addEventListener("click", App.resetTimer);
   App.el.completeButton.addEventListener("click", () => App.finishTimerPhase());
   App.el.minutesInput.addEventListener("input", App.syncDurationInputs);

@@ -204,6 +204,26 @@ App.resetTimer = function resetTimer() {
   App.renderTimer();
 };
 
+App.syncDurationInputs = function syncDurationInputs() {
+  const studyMinutes = Number(App.el.minutesInput.value) || App.state.settings.defaultStudyMinutes;
+  const breakMinutes = Number(App.el.breakMinutesInput.value) || App.state.settings.defaultBreakMinutes;
+  const timer = App.state.timerState;
+
+  timer.studyMinutes = studyMinutes;
+  timer.breakMinutes = breakMinutes;
+  if (timer.status !== "running") {
+    timer.remainingSeconds = (timer.mode === "break" ? breakMinutes : studyMinutes) * 60;
+  }
+  App.savePart("timerState");
+  App.renderTimer();
+};
+
+App.startManualBreak = function startManualBreak() {
+  window.clearInterval(App.timerInterval);
+  App.state.timerState.breakMinutes = Number(App.el.breakMinutesInput.value) || App.state.settings.defaultBreakMinutes;
+  App.startNextPhase("break");
+};
+
 App.tickTimer = function tickTimer() {
   const timer = App.state.timerState;
   if (timer.status !== "running" || !timer.expectedEndAt) {
@@ -302,6 +322,7 @@ App.renderTimer = function renderTimer() {
   App.el.timerText.textContent = `${App.pad(minutes)}:${App.pad(seconds)}`;
   App.el.progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
   App.el.startPauseButton.textContent = timer.status === "running" ? "一時停止" : "スタート";
+  App.el.startBreakButton.disabled = timer.status === "running" && timer.mode === "break";
   App.el.statusText.textContent = timer.status === "running" ? (timer.mode === "break" ? "休憩中" : "集中タイム") : "準備できたらスタート";
   App.el.timerModeBadge.textContent = timer.mode === "break" ? "休憩中" : "勉強中";
   App.el.timerModeBadge.className = `mode-badge ${timer.mode}`;
