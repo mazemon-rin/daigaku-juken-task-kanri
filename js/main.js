@@ -111,10 +111,14 @@ App.bindEvents = function bindEvents() {
     App.renderSubjects();
   });
 
-  [App.el.soundToggle, App.el.themeToggle, App.el.autoSaveToggle, App.el.defaultStudyInput, App.el.defaultBreakInput, App.el.settingsGoalInput]
+  [App.el.soundToggle, App.el.wakeLockToggle, App.el.themeToggle, App.el.autoSaveToggle, App.el.defaultStudyInput, App.el.defaultBreakInput, App.el.settingsGoalInput]
     .forEach((input) => input.addEventListener("change", App.applySettingInputs));
   App.el.soundToggle.addEventListener("change", () => {
     if (App.el.soundToggle.checked) App.unlockAudio();
+  });
+  App.el.wakeLockToggle.addEventListener("change", () => {
+    if (App.el.wakeLockToggle.checked && App.state.timerState.status === "running") App.requestWakeLock();
+    if (!App.el.wakeLockToggle.checked) App.releaseWakeLock();
   });
 
   App.el.exportCsvButton.addEventListener("click", App.exportCsv);

@@ -15,6 +15,7 @@ App.keys = {
 App.defaults = {
   settings: {
     soundEnabled: true,
+    wakeLockEnabled: true,
     darkMode: false,
     autoSave: true,
     defaultStudyMinutes: 25,

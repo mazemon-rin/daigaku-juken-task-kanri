@@ -4,6 +4,7 @@ window.App = window.App || {};
 App.renderSettings = function renderSettings() {
   const settings = App.state.settings;
   App.el.soundToggle.checked = settings.soundEnabled;
+  App.el.wakeLockToggle.checked = settings.wakeLockEnabled;
   App.el.themeToggle.checked = settings.darkMode;
   App.el.autoSaveToggle.checked = settings.autoSave;
   App.el.defaultStudyInput.value = settings.defaultStudyMinutes;

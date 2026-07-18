@@ -7,6 +7,7 @@ App.isFinishingTimer = false;
 App.wakeLock = null;
 
 App.requestWakeLock = async function requestWakeLock() {
+  if (!App.state.settings.wakeLockEnabled) return;
   if (!("wakeLock" in navigator)) return;
   if (App.wakeLock) return;
 
@@ -307,6 +308,7 @@ App.restoreTimer = function restoreTimer() {
   App.el.breakMinutesInput.value = timer.breakMinutes || App.state.settings.defaultBreakMinutes;
   App.el.pomodoroToggle.checked = App.state.settings.pomodoroEnabled;
   if (timer.status === "running") {
+    App.requestWakeLock();
     App.tickTimer();
     App.timerInterval = window.setInterval(App.tickTimer, 1000);
   } else {

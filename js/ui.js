@@ -33,6 +33,7 @@ App.renderAll = function renderAll() {
 
 App.applySettingInputs = function applySettingInputs() {
   App.state.settings.soundEnabled = App.el.soundToggle.checked;
+  App.state.settings.wakeLockEnabled = App.el.wakeLockToggle.checked;
   App.state.settings.darkMode = App.el.themeToggle.checked;
   App.state.settings.autoSave = App.el.autoSaveToggle.checked;
   App.state.settings.defaultStudyMinutes = Number(App.el.defaultStudyInput.value) || 25;
