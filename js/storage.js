@@ -45,7 +45,12 @@ App.storage = {
   read(key, fallback) {
     try {
       const value = JSON.parse(localStorage.getItem(key));
-      return value == null ? fallback : value;
+      if (value != null) return value;
+    } catch {
+    }
+    try {
+      const backup = JSON.parse(localStorage.getItem(`${key}-backup`));
+      return backup == null ? fallback : backup;
     } catch {
       return fallback;
     }
@@ -53,10 +58,12 @@ App.storage = {
 
   write(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
+    localStorage.setItem(`${key}-backup`, JSON.stringify(value));
   },
 
   remove(key) {
     localStorage.removeItem(key);
+    localStorage.removeItem(`${key}-backup`);
   },
 };
 

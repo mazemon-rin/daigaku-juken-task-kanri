@@ -52,15 +52,18 @@ App.bindEvents = function bindEvents() {
     App.renderAll();
   });
   App.el.historySearch.addEventListener("input", App.renderHistory);
+  App.el.historyDateInput.addEventListener("change", () => App.showDateHistory(App.el.historyDateInput.value));
   App.el.trendSubject.addEventListener("change", App.renderSubjectTrend);
 
   document.body.addEventListener("click", (event) => {
     const edit = event.target.closest("[data-edit-record]");
     const del = event.target.closest("[data-delete-record]");
     const subjectDel = event.target.closest("[data-delete-subject]");
+    const historyDate = event.target.closest("[data-history-date]");
     if (edit) App.editRecord(edit.dataset.editRecord);
     if (del) App.deleteRecord(del.dataset.deleteRecord);
     if (subjectDel) App.deleteSubject(subjectDel.dataset.deleteSubject);
+    if (historyDate) App.showDateHistory(historyDate.dataset.historyDate);
   });
 
   App.el.saveGoalButton.addEventListener("click", () => {
@@ -104,6 +107,8 @@ App.bindEvents = function bindEvents() {
     App.state.dailyPlans[App.dateKey()] = [];
     App.renderDailyPlan();
   });
+  App.el.loadPlanButton.addEventListener("click", App.loadPlanFromHistory);
+  App.el.loadTaskButton.addEventListener("click", App.loadTasksFromHistory);
 
   App.el.subjectForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -128,7 +133,9 @@ App.bindEvents = function bindEvents() {
   App.el.importJsonInput.addEventListener("change", () => App.el.importJsonInput.files[0] && App.importJson(App.el.importJsonInput.files[0]));
 
   window.addEventListener("beforeunload", () => App.saveAll());
+  window.addEventListener("pagehide", () => App.saveAll());
   document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") App.saveAll();
     if (document.visibilityState === "visible" && App.state.timerState.status === "running") {
       App.requestWakeLock();
     }

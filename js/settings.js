@@ -37,6 +37,36 @@ App.todaysPlan = function todaysPlan() {
   return App.state.dailyPlans[today];
 };
 
+App.dateOptionsFrom = function dateOptionsFrom(source) {
+  return Object.keys(source || {})
+    .filter((date) => Array.isArray(source[date]) && source[date].length)
+    .sort((a, b) => b.localeCompare(a));
+};
+
+App.fillHistorySelect = function fillHistorySelect(select, dates) {
+  select.innerHTML = "";
+  if (!dates.length) {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "履歴なし";
+    select.append(option);
+    select.disabled = true;
+    return;
+  }
+  select.disabled = false;
+  dates.forEach((date) => {
+    const option = document.createElement("option");
+    option.value = date;
+    option.textContent = date;
+    select.append(option);
+  });
+};
+
+App.renderReuseSelectors = function renderReuseSelectors() {
+  App.fillHistorySelect(App.el.planHistorySelect, App.dateOptionsFrom(App.state.dailyPlans));
+  App.fillHistorySelect(App.el.taskHistorySelect, App.dateOptionsFrom(App.state.tasks));
+};
+
 App.addDailyPlanItem = function addDailyPlanItem() {
   const title = App.el.planTitleInput.value.trim();
   if (!title) {
@@ -62,6 +92,7 @@ App.renderDailyPlan = function renderDailyPlan() {
   if (!list.length) {
     App.el.dailyPlanList.innerHTML = '<p class="empty-state">今日の計画はまだありません</p>';
     App.savePart("dailyPlans");
+    App.renderReuseSelectors();
     return;
   }
   list.forEach((item, index) => {
@@ -79,6 +110,7 @@ App.renderDailyPlan = function renderDailyPlan() {
     App.el.dailyPlanList.append(row);
   });
   App.savePart("dailyPlans");
+  App.renderReuseSelectors();
 };
 
 App.renderExamCountdown = function renderExamCountdown() {
@@ -113,6 +145,23 @@ App.renderTasks = function renderTasks() {
     App.el.taskList.append(item);
   });
   App.savePart("tasks");
+  App.renderReuseSelectors();
+};
+
+App.loadPlanFromHistory = function loadPlanFromHistory() {
+  const date = App.el.planHistorySelect.value;
+  if (!date || !Array.isArray(App.state.dailyPlans[date])) return;
+  App.state.dailyPlans[App.dateKey()] = App.state.dailyPlans[date].map((item) => ({ ...item }));
+  App.savePart("dailyPlans");
+  App.renderDailyPlan();
+};
+
+App.loadTasksFromHistory = function loadTasksFromHistory() {
+  const date = App.el.taskHistorySelect.value;
+  if (!date || !Array.isArray(App.state.tasks[date])) return;
+  App.state.tasks[App.dateKey()] = App.state.tasks[date].map((task) => ({ text: task.text, done: false }));
+  App.savePart("tasks");
+  App.renderTasks();
 };
 
 App.exportFile = function exportFile(filename, content, type) {

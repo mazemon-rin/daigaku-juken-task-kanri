@@ -82,6 +82,8 @@ App.renderMonthCalendar = function renderMonthCalendar() {
     const heat = hours >= 6 ? 4 : hours >= 4 ? 3 : hours >= 2 ? 2 : hours > 0 ? 1 : 0;
     const day = document.createElement("div");
     day.className = `month-day heat-${heat}`;
+    day.dataset.historyDate = App.dateKey(date);
+    day.tabIndex = 0;
     day.innerHTML = `<strong>${date.getDate()}</strong><br><span>${App.formatMinutes(minutes)}</span>`;
     App.el.monthCalendar.append(day);
   });

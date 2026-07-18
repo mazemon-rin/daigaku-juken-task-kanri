@@ -49,6 +49,67 @@ App.renderHistory = function renderHistory() {
   filtered.forEach((record) => App.el.historyList.append(App.recordNode(record, true)));
 };
 
+App.historyTaskNode = function historyTaskNode(task) {
+  const item = document.createElement("div");
+  item.className = "history-task-item";
+  item.innerHTML = `<span>${task.done ? "済" : "未"}: ${App.escapeHtml(task.text)}</span>`;
+  return item;
+};
+
+App.historyPlanNode = function historyPlanNode(plan) {
+  const item = document.createElement("div");
+  item.className = "plan-item";
+  const time = plan.start || plan.end ? `${plan.start || "--:--"} - ${plan.end || "--:--"}` : "時間未定";
+  item.innerHTML = `
+    <div class="plan-time">${App.escapeHtml(time)}</div>
+    <div class="plan-main">
+      <strong>${App.escapeHtml(plan.title)}</strong>
+      ${plan.note ? `<span>${App.escapeHtml(plan.note)}</span>` : ""}
+    </div>
+  `;
+  return item;
+};
+
+App.renderSelectedDateHistory = function renderSelectedDateHistory() {
+  const date = App.state.selectedHistoryDate || App.dateKey();
+  App.el.historyDateInput.value = date;
+  App.el.historyDateTitle.textContent = `${date} の履歴`;
+
+  const records = App.recordsForDate(date);
+  App.el.historyDateRecords.innerHTML = "";
+  if (!records.length) {
+    App.el.historyDateRecords.innerHTML = '<div class="empty-state">この日の勉強記録はありません</div>';
+  } else {
+    records.slice().reverse().forEach((record) => App.el.historyDateRecords.append(App.recordNode(record, true)));
+  }
+
+  const tasks = App.state.tasks[date] || [];
+  App.el.historyDateTasks.innerHTML = "";
+  if (!tasks.length) {
+    App.el.historyDateTasks.innerHTML = '<div class="empty-state">この日のやることはありません</div>';
+  } else {
+    tasks.forEach((task) => App.el.historyDateTasks.append(App.historyTaskNode(task)));
+  }
+
+  const plans = App.state.dailyPlans[date] || [];
+  App.el.historyDatePlans.innerHTML = "";
+  if (!plans.length) {
+    App.el.historyDatePlans.innerHTML = '<div class="empty-state">この日の計画はありません</div>';
+  } else {
+    plans
+      .slice()
+      .sort((a, b) => `${a.start || "99:99"}${a.end || ""}`.localeCompare(`${b.start || "99:99"}${b.end || ""}`))
+      .forEach((plan) => App.el.historyDatePlans.append(App.historyPlanNode(plan)));
+  }
+};
+
+App.showDateHistory = function showDateHistory(date) {
+  if (!date) return;
+  App.state.selectedHistoryDate = date;
+  App.switchTab("history");
+  App.renderSelectedDateHistory();
+};
+
 App.renderTodayTotals = function renderTodayTotals(records) {
   const totals = App.subjectTotals(records);
   const total = records.reduce((sum, record) => sum + record.minutes, 0);

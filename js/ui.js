@@ -23,8 +23,10 @@ App.renderAll = function renderAll() {
   App.renderSubjects();
   App.renderTodayRecords();
   App.renderHistory();
+  App.renderSelectedDateHistory();
   App.renderAnalysis();
   App.renderSettings();
+  App.renderReuseSelectors();
   App.renderDailyPlan();
   App.renderTasks();
   App.renderTimer();

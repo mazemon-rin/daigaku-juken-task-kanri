@@ -101,6 +101,26 @@
       <section id="history" class="tab-page">
         <section class="panel">
           <div class="section-heading">
+            <h2 id="historyDateTitle">日付別の履歴</h2>
+            <input id="historyDateInput" class="compact-input" type="date">
+          </div>
+          <div class="history-day-grid">
+            <div>
+              <h2>勉強記録</h2>
+              <div id="historyDateRecords" class="record-list"></div>
+            </div>
+            <div>
+              <h2>今日やること</h2>
+              <div id="historyDateTasks" class="task-list"></div>
+            </div>
+            <div>
+              <h2>1日の計画</h2>
+              <div id="historyDatePlans" class="daily-plan-list"></div>
+            </div>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="section-heading">
             <h2>全履歴</h2>
             <input id="historySearch" class="compact-input" type="search" placeholder="科目・メモ・タグ">
           </div>
@@ -170,7 +190,11 @@
         <section class="panel">
           <div class="section-heading">
             <h2>1日の計画</h2>
-            <button id="clearPlanButton" type="button" class="text-button">計画を削除</button>
+            <div class="reuse-controls">
+              <select id="planHistorySelect" class="compact-input"></select>
+              <button id="loadPlanButton" type="button">選択日から読込</button>
+              <button id="clearPlanButton" type="button" class="text-button">計画を削除</button>
+            </div>
           </div>
           <form id="dailyPlanForm" class="daily-plan-form">
             <label class="field"><span>開始</span><input id="planStartInput" type="time"></label>
@@ -182,7 +206,13 @@
           <div id="dailyPlanList" class="daily-plan-list"></div>
         </section>
         <section class="panel">
-          <h2>今日やること</h2>
+          <div class="section-heading">
+            <h2>今日やること</h2>
+            <div class="reuse-controls">
+              <select id="taskHistorySelect" class="compact-input"></select>
+              <button id="loadTaskButton" type="button">選択日から読込</button>
+            </div>
+          </div>
           <form id="taskForm" class="task-form">
             <input id="taskInput" class="compact-input" type="text" placeholder="数学 2時間">
             <button type="submit" class="primary">追加</button>
