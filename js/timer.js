@@ -33,6 +33,13 @@ App.releaseWakeLock = async function releaseWakeLock() {
   }
 };
 
+App.vibrate = function vibrate() {
+  if (!App.state.settings.vibrationEnabled) return;
+  if (!("vibrate" in navigator)) return;
+
+  navigator.vibrate([500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 1000]);
+};
+
 App.unlockAudio = function unlockAudio() {
   if (!App.state.settings.soundEnabled) return;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -216,6 +223,7 @@ App.finishTimerPhase = async function finishTimerPhase() {
   App.timerInterval = null;
   App.releaseWakeLock();
 
+  App.vibrate();
   await App.beep();
 
   const timer = App.state.timerState;

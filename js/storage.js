@@ -15,6 +15,7 @@ App.keys = {
 App.defaults = {
   settings: {
     soundEnabled: true,
+    vibrationEnabled: true,
     wakeLockEnabled: true,
     darkMode: false,
     autoSave: true,

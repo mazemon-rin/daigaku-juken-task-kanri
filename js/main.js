@@ -111,7 +111,7 @@ App.bindEvents = function bindEvents() {
     App.renderSubjects();
   });
 
-  [App.el.soundToggle, App.el.wakeLockToggle, App.el.themeToggle, App.el.autoSaveToggle, App.el.defaultStudyInput, App.el.defaultBreakInput, App.el.settingsGoalInput]
+  [App.el.soundToggle, App.el.vibrationToggle, App.el.wakeLockToggle, App.el.themeToggle, App.el.autoSaveToggle, App.el.defaultStudyInput, App.el.defaultBreakInput, App.el.settingsGoalInput]
     .forEach((input) => input.addEventListener("change", App.applySettingInputs));
   App.el.soundToggle.addEventListener("change", () => {
     if (App.el.soundToggle.checked) App.unlockAudio();
@@ -150,6 +150,7 @@ function adjustInput(input, diff, callback) {
 - 履歴の検索、編集、削除
 - CSV保存/読込、JSONバックアップ/復元
 - 通知音、ダークモード、デフォルト時間、自動保存、目標時間の設定
+- タイマー終了時のバイブレーション
 - タイマー中の画面スリープ防止
 
 変更点:
