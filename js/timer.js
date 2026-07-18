@@ -289,6 +289,14 @@ App.startNextPhase = function startNextPhase(mode) {
   App.timerInterval = window.setInterval(App.tickTimer, 1000);
 };
 
+App.studyElapsedMinutes = function studyElapsedMinutes() {
+  const timer = App.state.timerState;
+  const totalSeconds = Math.max(0, Number(timer.studyMinutes) * 60);
+  const remainingSeconds = Math.max(0, Number(timer.remainingSeconds) || 0);
+  const elapsedSeconds = Math.max(0, totalSeconds - remainingSeconds);
+  return Math.max(1, Math.ceil(elapsedSeconds / 60));
+};
+
 App.saveStudyRecord = function saveStudyRecord() {
   const timer = App.state.timerState;
   const subject = timer.subject || App.el.subjectInput.value.trim();
@@ -300,7 +308,7 @@ App.saveStudyRecord = function saveStudyRecord() {
     id: `record-${Date.now()}`,
     date: App.dateKey(endDate),
     subject,
-    minutes: Number(timer.studyMinutes),
+    minutes: App.studyElapsedMinutes(),
     start: App.timeLabel(startDate),
     end: App.timeLabel(endDate),
     memo,
