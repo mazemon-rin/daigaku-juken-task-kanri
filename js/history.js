@@ -29,7 +29,14 @@ App.renderTodayRecords = function renderTodayRecords() {
   if (!todayRecords.length) {
     App.el.recordList.innerHTML = '<div class="empty-state">まだ今日の記録はありません</div>';
   } else {
-    todayRecords.slice().reverse().forEach((record) => App.el.recordList.append(App.recordNode(record, true)));
+    todayRecords
+      .slice()
+      .reverse()
+      .slice(0, 3)
+      .forEach((record) => App.el.recordList.append(App.recordNode(record, true)));
+  }
+  if (App.el.viewMoreTodayRecords) {
+    App.el.viewMoreTodayRecords.hidden = todayRecords.length <= 3;
   }
   App.renderTodayTotals(todayRecords);
 };

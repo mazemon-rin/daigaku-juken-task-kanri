@@ -24,12 +24,14 @@
       <section id="home" class="tab-page active">
         <section class="panel timer-panel">
           <div id="timerModeBadge" class="mode-badge study">勉強中</div>
-          <div class="setup-grid">
+          <div class="setup-grid home-subject-grid">
             <label class="field">
               <span>科目</span>
               <input id="subjectInput" list="subjectList" type="text" placeholder="数学" autocomplete="off">
               <datalist id="subjectList"></datalist>
             </label>
+          </div>
+          <div class="setup-grid duration-grid">
             <label class="field">
               <span>勉強時間</span>
               <div class="minutes-control">
@@ -39,8 +41,6 @@
                 <button id="increaseMinutes" type="button">＋</button>
               </div>
             </label>
-          </div>
-          <div class="setup-grid">
             <label class="field">
               <span>休憩時間</span>
               <div class="minutes-control">
@@ -50,35 +50,55 @@
                 <button id="increaseBreak" type="button">＋</button>
               </div>
             </label>
+          </div>
+          <div id="timerDisplay" class="timer-display study">
+            <strong id="timerText">25:00</strong>
+            <p id="statusText">準備できたらスタート</p>
+            <div class="progress-track"><div id="progressBar"></div></div>
+          </div>
+          <div class="primary-action">
+            <button id="startPauseButton" type="button" class="primary">スタート</button>
+          </div>
+          <div class="secondary-actions">
+            <button id="startBreakButton" type="button">休憩を開始</button>
+            <button id="completeButton" type="button">今すぐ記録</button>
+          </div>
+          <div class="reset-action">
+            <button id="resetButton" type="button" class="text-button">リセット</button>
+          </div>
+          <details class="timer-details">
+            <summary>詳細設定</summary>
+            <label class="field memo-field">
+              <span>勉強メモ</span>
+              <input id="memoInput" type="text" placeholder="青チャート P32〜45、#共テ など">
+            </label>
             <label class="toggle-field">
               <input id="pomodoroToggle" type="checkbox">
               <span>ポモドーロを自動で繰り返す</span>
             </label>
-          </div>
-          <label class="field memo-field">
-            <span>勉強メモ</span>
-            <input id="memoInput" type="text" placeholder="青チャート P32〜45、#共テ など">
-          </label>
-          <div id="timerDisplay" class="timer-display study">
-            <p id="statusText">準備できたらスタート</p>
-            <strong id="timerText">25:00</strong>
-            <div class="progress-track"><div id="progressBar"></div></div>
-          </div>
-          <div class="actions">
-            <button id="startPauseButton" type="button" class="primary">スタート</button>
-            <button id="startBreakButton" type="button">休憩を開始</button>
-            <button id="resetButton" type="button">リセット</button>
-            <button id="completeButton" type="button">今すぐ記録</button>
-          </div>
+          </details>
         </section>
 
         <section class="panel">
           <div class="section-heading">
-            <h2>今日の目標</h2>
+            <h2>今日やること</h2>
+            <strong id="homeTaskProgress">今日のタスクはまだありません</strong>
+          </div>
+          <div id="homeTaskList" class="task-list home-task-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <h2>今日の進捗</h2>
             <strong id="todayGoalSummary">0分 / 8時間</strong>
           </div>
           <div class="progress-track goal-track"><div id="todayGoalBar"></div></div>
           <p id="todayGoalLeft" class="muted-line">残り 8時間</p>
+          <div class="section-heading total-heading">
+            <span>今日の合計</span>
+            <strong id="totalTime">0分</strong>
+          </div>
+          <div id="subjectTotals" class="subject-totals"></div>
         </section>
 
         <section class="panel">
@@ -87,14 +107,7 @@
             <button id="clearTodayButton" type="button" class="text-button">今日を削除</button>
           </div>
           <div id="recordList" class="record-list"></div>
-        </section>
-
-        <section class="panel">
-          <div class="section-heading">
-            <h2>今日の合計</h2>
-            <strong id="totalTime">0分</strong>
-          </div>
-          <div id="subjectTotals" class="subject-totals"></div>
+          <button id="viewMoreTodayRecords" type="button" class="wide-button subtle-button" hidden>もっと見る</button>
         </section>
       </section>
 
@@ -260,11 +273,11 @@
     </main>
 
     <nav class="bottom-tabs" aria-label="画面切り替え">
-      <button class="tab active" data-tab="home" type="button">ホーム</button>
-      <button class="tab" data-tab="history" type="button">履歴</button>
-      <button class="tab" data-tab="analysis" type="button">分析</button>
-      <button class="tab" data-tab="goals" type="button">目標</button>
-      <button class="tab" data-tab="settings" type="button">設定</button>
+      <button class="tab active" data-tab="home" type="button"><span class="tab-icon" aria-hidden="true">⌂</span><span>ホーム</span></button>
+      <button class="tab" data-tab="history" type="button"><span class="tab-icon" aria-hidden="true">◷</span><span>履歴</span></button>
+      <button class="tab" data-tab="analysis" type="button"><span class="tab-icon" aria-hidden="true">▥</span><span>分析</span></button>
+      <button class="tab" data-tab="goals" type="button"><span class="tab-icon" aria-hidden="true">◎</span><span>目標</span></button>
+      <button class="tab" data-tab="settings" type="button"><span class="tab-icon" aria-hidden="true">⚙</span><span>設定</span></button>
     </nav>
 
     <footer class="app-footer">

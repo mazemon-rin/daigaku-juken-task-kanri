@@ -94,6 +94,15 @@ App.bindEvents = function bindEvents() {
     if (del) App.todaysTasks().splice(Number(del.dataset.deleteTask), 1);
     App.renderTasks();
   });
+  App.el.homeTaskList.addEventListener("click", (event) => {
+    const check = event.target.closest("[data-home-task-index]");
+    if (!check) return;
+    App.todaysTasks()[Number(check.dataset.homeTaskIndex)].done = check.checked;
+    App.renderTasks();
+  });
+  App.el.viewMoreTodayRecords.addEventListener("click", () => {
+    App.showDateHistory(App.dateKey());
+  });
   App.el.dailyPlanForm.addEventListener("submit", (event) => {
     event.preventDefault();
     App.addDailyPlanItem();

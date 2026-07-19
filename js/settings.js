@@ -133,7 +133,9 @@ App.todaysTasks = function todaysTasks() {
 App.renderTasks = function renderTasks() {
   const list = App.todaysTasks();
   const done = list.filter((task) => task.done).length;
-  App.el.taskProgress.textContent = list.length ? `達成率 ${Math.round((done / list.length) * 100)}%` : "今日のタスクはまだありません";
+  const progressText = list.length ? `達成率 ${Math.round((done / list.length) * 100)}%` : "今日のタスクはまだありません";
+
+  App.el.taskProgress.textContent = progressText;
   App.el.taskList.innerHTML = "";
   list.forEach((task, index) => {
     const item = document.createElement("div");
@@ -144,8 +146,28 @@ App.renderTasks = function renderTasks() {
     `;
     App.el.taskList.append(item);
   });
+
+  App.renderHomeTasks(list, progressText);
   App.savePart("tasks");
   App.renderReuseSelectors();
+};
+
+App.renderHomeTasks = function renderHomeTasks(list, progressText) {
+  if (!App.el.homeTaskProgress || !App.el.homeTaskList) return;
+  App.el.homeTaskProgress.textContent = progressText;
+  App.el.homeTaskList.innerHTML = "";
+  if (!list.length) {
+    App.el.homeTaskList.innerHTML = '<div class="empty-state">今日やることはまだありません</div>';
+    return;
+  }
+  list.forEach((task, index) => {
+    const item = document.createElement("div");
+    item.className = `task-item ${task.done ? "done" : ""}`;
+    item.innerHTML = `
+      <label><input type="checkbox" ${task.done ? "checked" : ""} data-home-task-index="${index}"><span>${App.escapeHtml(task.text)}</span></label>
+    `;
+    App.el.homeTaskList.append(item);
+  });
 };
 
 App.loadPlanFromHistory = function loadPlanFromHistory() {
