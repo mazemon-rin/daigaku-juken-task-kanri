@@ -22,6 +22,7 @@ App.renderSubjects = function renderSubjects() {
   App.savePart("subjects");
 
   App.el.subjectList.innerHTML = "";
+  App.el.subjectHistorySelect.innerHTML = '<option value="">履歴から科目を選択</option>';
   App.el.trendSubject.innerHTML = "";
   App.el.subjectManageList.innerHTML = "";
 
@@ -29,6 +30,11 @@ App.renderSubjects = function renderSubjects() {
     const option = document.createElement("option");
     option.value = subject;
     App.el.subjectList.append(option);
+
+    const historyOption = document.createElement("option");
+    historyOption.value = subject;
+    historyOption.textContent = subject;
+    App.el.subjectHistorySelect.append(historyOption);
 
     const selectOption = document.createElement("option");
     selectOption.value = subject;

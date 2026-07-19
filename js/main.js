@@ -44,6 +44,12 @@ App.bindEvents = function bindEvents() {
     App.savePart("settings");
   });
   App.el.subjectInput.addEventListener("change", () => App.addSubject(App.el.subjectInput.value));
+  App.el.subjectHistorySelect.addEventListener("change", () => {
+    if (!App.el.subjectHistorySelect.value) return;
+    App.el.subjectInput.value = App.el.subjectHistorySelect.value;
+    App.addSubject(App.el.subjectInput.value);
+    App.el.subjectInput.focus();
+  });
 
   App.el.clearTodayButton.addEventListener("click", () => {
     if (!confirm("今日の記録をすべて削除しますか？")) return;

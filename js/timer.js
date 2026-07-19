@@ -220,8 +220,13 @@ App.syncDurationInputs = function syncDurationInputs() {
 
 App.startManualBreak = function startManualBreak() {
   window.clearInterval(App.timerInterval);
+  App.timerInterval = null;
+  if (App.state.timerState.mode === "study" && App.state.timerState.status !== "idle") {
+    App.saveStudyRecord();
+  }
   App.state.timerState.breakMinutes = Number(App.el.breakMinutesInput.value) || App.state.settings.defaultBreakMinutes;
   App.startNextPhase("break");
+  App.renderAll();
 };
 
 App.tickTimer = function tickTimer() {
@@ -292,7 +297,10 @@ App.startNextPhase = function startNextPhase(mode) {
 App.studyElapsedMinutes = function studyElapsedMinutes() {
   const timer = App.state.timerState;
   const totalSeconds = Math.max(0, Number(timer.studyMinutes) * 60);
-  const remainingSeconds = Math.max(0, Number(timer.remainingSeconds) || 0);
+  const liveRemainingSeconds = timer.status === "running" && timer.expectedEndAt
+    ? Math.ceil((new Date(timer.expectedEndAt) - new Date()) / 1000)
+    : timer.remainingSeconds;
+  const remainingSeconds = Math.max(0, Number(liveRemainingSeconds) || 0);
   const elapsedSeconds = Math.max(0, totalSeconds - remainingSeconds);
   return Math.max(1, Math.ceil(elapsedSeconds / 60));
 };
