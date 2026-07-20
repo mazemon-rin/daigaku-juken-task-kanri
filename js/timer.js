@@ -15,6 +15,9 @@ App.requestWakeLock = async function requestWakeLock() {
     App.wakeLock = await navigator.wakeLock.request("screen");
     App.wakeLock.addEventListener("release", () => {
       App.wakeLock = null;
+      if (App.state.timerState.status === "running" && document.visibilityState === "visible") {
+        App.requestWakeLock();
+      }
     });
   } catch (error) {
     console.warn("画面スリープ防止を有効にできませんでした", error);
@@ -246,16 +249,23 @@ App.finishTimerPhase = async function finishTimerPhase() {
   App.isFinishingTimer = true;
   window.clearInterval(App.timerInterval);
   App.timerInterval = null;
-  App.releaseWakeLock();
+
+  const timer = App.state.timerState;
+  const finishedMode = timer.mode;
+
+  if (finishedMode === "study") {
+    App.saveStudyRecord();
+  }
+
+  timer.status = "paused";
+  timer.remainingSeconds = 0;
+  timer.expectedEndAt = null;
+  App.savePart("timerState");
 
   App.vibrate();
   await App.beep();
 
-  const timer = App.state.timerState;
-
-  if (timer.mode === "study") {
-    App.saveStudyRecord();
-
+  if (finishedMode === "study") {
     alert("勉強終了！お疲れ様でした");
 
     if (App.state.settings.pomodoroEnabled) {
