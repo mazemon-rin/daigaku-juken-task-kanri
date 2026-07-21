@@ -116,10 +116,14 @@
 
       <section id="stopwatch" class="tab-page">
         <section class="panel stopwatch-panel">
-          <div class="mode-badge study">フリー計測</div>
+          <div class="mode-badge study">ストップウォッチ</div>
+          <label class="field">
+            <span>科目</span>
+            <input id="stopwatchSubjectInput" list="subjectList" type="text" placeholder="未入力ならフリー" autocomplete="off">
+          </label>
           <div class="stopwatch-display" aria-live="polite">
             <strong id="stopwatchText">00:00:00</strong>
-            <p id="stopwatchStatus" class="muted-line">科目を決めずに、今から勉強した時間を測れます</p>
+            <p id="stopwatchStatus" class="muted-line">科目を入力して、今から勉強した時間を測れます</p>
           </div>
           <div class="primary-action">
             <button id="stopwatchStartPauseButton" type="button" class="primary">スタート</button>
@@ -128,7 +132,7 @@
             <button id="stopwatchSaveButton" type="button">停止して記録</button>
             <button id="stopwatchResetButton" type="button" class="text-button">リセット</button>
           </div>
-          <p class="muted-line">記録される科目名: フリー</p>
+          <p class="muted-line">科目を空欄にした場合は「フリー」で記録されます</p>
         </section>
       </section>
 

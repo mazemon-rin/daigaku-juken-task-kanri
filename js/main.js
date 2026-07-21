@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   App.el.minutesInput.value = App.state.timerState.studyMinutes || App.state.settings.defaultStudyMinutes;
   App.el.breakMinutesInput.value = App.state.timerState.breakMinutes || App.state.settings.defaultBreakMinutes;
   App.restoreTimer();
+  App.loadStopwatch();
   App.bindEvents();
   App.renderClock();
   window.setInterval(App.renderClock, 1000);
@@ -114,6 +115,11 @@ App.bindEvents = function bindEvents() {
   });
   App.el.stopwatchSaveButton.addEventListener("click", App.saveStopwatchRecord);
   App.el.stopwatchResetButton.addEventListener("click", App.resetStopwatch);
+  App.el.stopwatchSubjectInput.addEventListener("change", () => {
+    App.stopwatch.subject = App.el.stopwatchSubjectInput.value.trim();
+    App.saveStopwatch();
+    if (App.stopwatch.subject) App.addSubject(App.stopwatch.subject);
+  });
 
   App.el.dailyPlanForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -155,10 +161,19 @@ App.bindEvents = function bindEvents() {
   App.el.importCsvInput.addEventListener("change", () => App.el.importCsvInput.files[0] && App.importCsv(App.el.importCsvInput.files[0]));
   App.el.importJsonInput.addEventListener("change", () => App.el.importJsonInput.files[0] && App.importJson(App.el.importJsonInput.files[0]));
 
-  window.addEventListener("beforeunload", () => App.saveAll());
-  window.addEventListener("pagehide", () => App.saveAll());
+  window.addEventListener("beforeunload", () => {
+    App.saveStopwatch();
+    App.saveAll();
+  });
+  window.addEventListener("pagehide", () => {
+    App.saveStopwatch();
+    App.saveAll();
+  });
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") App.saveAll();
+    if (document.visibilityState === "hidden") {
+      App.saveStopwatch();
+      App.saveAll();
+    }
     if (document.visibilityState === "visible" && App.state.timerState.status === "running") {
       App.requestWakeLock();
     }
