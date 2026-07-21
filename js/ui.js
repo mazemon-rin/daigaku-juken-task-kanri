@@ -30,6 +30,7 @@ App.renderAll = function renderAll() {
   App.renderDailyPlan();
   App.renderTasks();
   App.renderTimer();
+  App.renderStopwatch();
   App.updateStatisticsCache();
 };
 

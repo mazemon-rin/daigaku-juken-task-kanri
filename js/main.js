@@ -109,6 +109,12 @@ App.bindEvents = function bindEvents() {
   App.el.viewMoreTodayRecords.addEventListener("click", () => {
     App.showDateHistory(App.dateKey());
   });
+  App.el.stopwatchStartPauseButton.addEventListener("click", () => {
+    App.stopwatch.status === "running" ? App.pauseStopwatch() : App.startStopwatch();
+  });
+  App.el.stopwatchSaveButton.addEventListener("click", App.saveStopwatchRecord);
+  App.el.stopwatchResetButton.addEventListener("click", App.resetStopwatch);
+
   App.el.dailyPlanForm.addEventListener("submit", (event) => {
     event.preventDefault();
     App.addDailyPlanItem();
