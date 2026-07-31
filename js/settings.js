@@ -193,7 +193,7 @@ App.exportFile = function exportFile(filename, content, type) {
   link.href = url;
   link.download = filename;
   link.click();
-  URL.revokeObjectURL(url);
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 
 App.exportCsv = function exportCsv() {

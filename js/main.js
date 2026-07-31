@@ -34,6 +34,13 @@ App.bindEvents = function bindEvents() {
   App.el.startBreakButton.addEventListener("click", App.startManualBreak);
   App.el.resetButton.addEventListener("click", App.resetTimer);
   App.el.completeButton.addEventListener("click", () => App.finishTimerPhase());
+  App.el.homeBackupButton.addEventListener("click", () => {
+    App.exportJson();
+    App.el.homeBackupStatus.textContent = "バックアップを保存しました";
+    window.setTimeout(() => {
+      App.el.homeBackupStatus.textContent = "";
+    }, 3000);
+  });
   App.el.minutesInput.addEventListener("input", App.syncDurationInputs);
   App.el.breakMinutesInput.addEventListener("input", App.syncDurationInputs);
   App.el.decreaseMinutes.addEventListener("click", () => adjustInput(App.el.minutesInput, -5, App.syncDurationInputs));
