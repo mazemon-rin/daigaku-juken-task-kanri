@@ -240,7 +240,8 @@ App.exportJson = function exportJson() {
     tasks: App.state.tasks,
     dailyPlans: App.state.dailyPlans,
   };
-  App.exportFile("study-tracker-backup.json", JSON.stringify(data, null, 2), "application/json");
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  App.exportFile("study-tracker-backup-" + timestamp + ".json", JSON.stringify(data, null, 2), "application/json");
 };
 
 App.importJson = async function importJson(file) {
